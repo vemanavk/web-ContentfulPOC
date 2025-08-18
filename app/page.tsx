@@ -6,10 +6,18 @@ interface Asset {
   fields: { file: { url: string } };
 }
 
+interface RichTextContent {
+  nodeType: string;
+  content: RichTextContent[];
+  value?: string;
+}
+
 interface BlogItem {
   fields: {
     title: string;
-    body: any; // You can further type this if needed
+    body: {
+      content: RichTextContent[];
+    };
     image: { sys: { id: string } };
   };
 }
@@ -20,16 +28,16 @@ interface Data {
 }
 
 // Basic implementation for rich text rendering
-function documentToReactComponents(document: any): React.ReactNode {
+function documentToReactComponents(document: { content: RichTextContent[] } | undefined): React.ReactNode {
   if (!document || !document.content) return null;
-  return document.content.map((node: any, idx: number) => {
+  return document.content.map((node, idx) => {
     switch (node.nodeType) {
       case "paragraph":
-        return <p key={idx}>{node.content.map((c: any) => c.value).join("")}</p>;
+        return <p key={idx}>{node.content.map((c) => c.value ?? "").join("")}</p>;
       case "heading-1":
-        return <h1 key={idx}>{node.content.map((c: any) => c.value).join("")}</h1>;
+        return <h1 key={idx}>{node.content.map((c) => c.value ?? "").join("")}</h1>;
       case "heading-2":
-        return <h2 key={idx}>{node.content.map((c: any) => c.value).join("")}</h2>;
+        return <h2 key={idx}>{node.content.map((c) => c.value ?? "").join("")}</h2>;
       default:
         return null;
     }
