@@ -27,7 +27,6 @@ interface Data {
   includes: { Asset: Asset[] };
 }
 
-// Basic implementation for rich text rendering
 function documentToReactComponents(document: { content: RichTextContent[] } | undefined): React.ReactNode {
   if (!document || !document.content) return null;
   return document.content.map((node, idx) => {
@@ -48,7 +47,14 @@ const url = `${process.env.BASE_URL}/spaces/${process.env.SPACE_ID}/environments
 
 export default async function Home() {
   const response = await fetch(url, { cache: "no-store" });
+  if (!response.ok) {
+    return <main>Error fetching data: {response.statusText}</main>;
+  }
   const data: Data = await response.json();
+
+  if (!data.items || !data.includes || !data.includes.Asset) {
+    return <main>No blog data found.</main>;
+  }
 
   return (
     <main>
