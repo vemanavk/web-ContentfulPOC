@@ -43,7 +43,7 @@ function documentToReactComponents(document: { content: RichTextContent[] } | un
   });
 }
 
-const url = `${process.env.BASE_URL}/spaces/${process.env.SPACE_ID}/environments/master/entries?access_token=${process.env.ACCESS_TOKEN}&content_type=blog`;
+const url = `${process.env.NEXT_PUBLIC_BASE_URL}/spaces/${process.env.NEXT_PUBLIC_SPACE_ID}/environments/master/entries?access_token=${process.env.NEXT_PUBLIC_ACCESS_TOKEN}&content_type=blog`;
 
 export default async function Home() {
   const response = await fetch(url, { cache: "no-store" });
